@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Simple Setup</title>
+    <!-- 只保留一个 ammo.wasm.js 引用 -->
+    <script src="src/lib/ammo/ammo.wasm.js"></script>
+    <script src="src/lib/phaser.min.js"></script>
+    <script src="src/lib/enable3d/enable3d.phaserExtension.0.25.4.min.js"></script>
+   </head>
+
+  <body>
+    <script>
+      const { enable3d, Scene3D, Canvas } = ENABLE3D
+
+      class MainScene extends Scene3D {
+        constructor() {
+          super({ key: 'MainScene' })
+        }
+
+        init() {
+          this.accessThirdDimension()
+        }
+
+        create() {
+          this.third.warpSpeed()
+          this.third.physics.add.box()
+        }
+      }
+
+      const config = {
+        type: Phaser.WEBGL,
+        transparent: true,
+        scale: {
+          mode: Phaser.Scale.FIT,
+          autoCenter: Phaser.Scale.CENTER_BOTH,
+          width: window.innerWidth * Math.max(1, window.devicePixelRatio / 2),
+          height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
+        },
+        scene: [MainScene],
+        ...Canvas()
+      }
+
+      window.addEventListener('load', () => {
+        // 修改物理引擎初始化路径
+        enable3d(() => new Phaser.Game(config)).withPhysics('/src/lib/ammo')
+      })
+    </script>
+  </body>
+</html>
