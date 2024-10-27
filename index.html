@@ -12,53 +12,9 @@
     <script src="src/lib/ammo/ammo.wasm.js"></script>
     <script src="src/lib/phaser.min.js"></script>
     <script src="src/lib/enable3d/enable3d.phaserExtension.0.25.4.min.js"></script>
+    <script src="src/js/index.js" defer></script>
    </head>
 
   <body>
-    <script>
-      const { enable3d, Scene3D, Canvas, ExtendedObject3D, LinearEncoding } = ENABLE3D
-
-      class MainScene extends Scene3D {
-        constructor() {
-          super({ key: 'MainScene' })
-        }
-
-        init() {
-          this.accessThirdDimension()
-        }
-
-        async create() {
-          const { camera, orbitControls } = await this.third.warpSpeed()
-          camera.position.set(3,10,6)
-          camera.lookAt(0,5,0)
-          orbitControls.target.set(0,5,0)
-         
-          const earth = new ExtendedObject3D()
-          const pos = {x:0, y:5, z:0}
-          this.third.load.fbx('/src/assets/newpixelearth.fbx').then(object =>{
-            earth.add(object)
-            this.third.add.existing(earth)
-          })
-        }
-      }
-
-      const config = {
-        type: Phaser.WEBGL,
-        transparent: true,
-        scale: {
-          mode: Phaser.Scale.FIT,
-          autoCenter: Phaser.Scale.CENTER_BOTH,
-          width: window.innerWidth * Math.max(1, window.devicePixelRatio / 2),
-          height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
-        },
-        scene: [MainScene],
-        ...Canvas()
-      }
-
-      window.addEventListener('load', () => {
-        // 修改物理引擎初始化路径
-        enable3d(() => new Phaser.Game(config)).withPhysics('/src/lib/ammo')
-      })
-    </script>
   </body>
 </html>

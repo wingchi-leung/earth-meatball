@@ -1,6 +1,5 @@
 // 从相应的库中导入所需的类和方法
-import 'phaser';
-import { enable3d, Scene3D, Canvas, ExtendedObject3D } from '@enable3d/phaser-extension';
+const { enable3d, Scene3D, Canvas, ExtendedObject3D } = ENABLE3D;
 
 class MainScene extends Scene3D {
   constructor() {
@@ -19,12 +18,13 @@ class MainScene extends Scene3D {
     
     const earth = new ExtendedObject3D()
     const pos = {x: 0, y: 5, z: 0}
-    this.third.load.fbx('/src/assets/newpixelearth.fbx').then(object => {
+    this.third.load.fbx('src/assets/newpixelearth.fbx').then(object => {
       earth.add(object)
       this.third.add.existing(earth)
     })
   }
 }
+
 
 const config = {
   type: Phaser.WEBGL,
