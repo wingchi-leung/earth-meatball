@@ -1,179 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Game Entry</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Simple Setup</title>
+    <!-- 只保留一个 ammo.wasm.js 引用 -->
+    <script src="src/lib/ammo/ammo.wasm.js"></script>
+    <script src="src/lib/phaser.min.js"></script>
+    <script src="src/lib/enable3d/enable3d.phaserExtension.0.25.4.min.js"></script>
+    <script src="src/js/index.js" defer></script>
+   </head>
 
-        .entry-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-
-        .game-title {
-            color: white;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .start-btn {
-            padding: 15px 40px;
-            font-size: 1.2em;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-            animation: pulse 2s infinite;
-        }
-
-        .start-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .start-btn:active {
-            transform: scale(0.95);
-        }
-
-        .loading-text {
-            color: white;
-            font-size: 1em;
-            margin-top: 20px;
-            opacity: 0.8;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(100vh); }
-        }
-
-        @media (max-width: 768px) {
-            .game-title {
-                font-size: 2em;
-                padding: 0 20px;
-            }
-            
-            .start-btn {
-                padding: 12px 30px;
-                font-size: 1em;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div id="particles" class="particles"></div>
-    <div class="entry-container" id="entryContainer">
-        <h1 class="game-title">像素地球探险</h1>
-        <button class="start-btn" id="startBtn">开始游戏</button>
-        <div class="loading-text" id="loadingText">资源加载中...</div>
-    </div>
-
-    <script>
-        // 创建粒子效果
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                // 随机大小
-                const size = Math.random() * 4 + 2;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // 随机位置
-                particle.style.left = `${Math.random() * 100}%`;
-                
-                // 随机动画持续时间和延迟
-                const duration = Math.random() * 3 + 2;
-                const delay = Math.random() * 2;
-                particle.style.animation = `fall ${duration}s ${delay}s linear infinite`;
-                
-                container.appendChild(particle);
-            }
-        }
-
-        // 页面加载完成后初始化
-        window.addEventListener('load', () => {
-            const loadingText = document.getElementById('loadingText');
-            const startBtn = document.getElementById('startBtn');
-            const entryContainer = document.getElementById('entryContainer');
-            
-            // 创建粒子效果
-            createParticles();
-            
-            // 模拟资源加载
-            setTimeout(() => {
-                loadingText.style.display = 'none';
-                startBtn.style.display = 'block';
-            }, 1500);
-            
-            // 点击开始按钮
-            startBtn.addEventListener('click', () => {
-                entryContainer.style.animation = 'fadeOut 0.5s forwards';
-                // 这里可以添加你的游戏初始化代码
-                setTimeout(() => {
-                    entryContainer.style.display = 'none';
-                    // 跳转到游戏页面或初始化游戏
-                    window.location.href = 'game.html'; // 替换为你的游戏页面
-                }, 500);
-            });
-        });
-    </script>
-</body>
+  <body>
+  </body>
 </html>
