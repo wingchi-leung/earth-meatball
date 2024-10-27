@@ -16,7 +16,7 @@
 
   <body>
     <script>
-      const { enable3d, Scene3D, Canvas } = ENABLE3D
+      const { enable3d, Scene3D, Canvas, ExtendedObject3D, LinearEncoding } = ENABLE3D
 
       class MainScene extends Scene3D {
         constructor() {
@@ -27,9 +27,18 @@
           this.accessThirdDimension()
         }
 
-        create() {
-          this.third.warpSpeed()
-          this.third.physics.add.box()
+        async create() {
+          const { camera, orbitControls } = await this.third.warpSpeed()
+          camera.position.set(3,10,6)
+          camera.lookAt(0,5,0)
+          orbitControls.target.set(0,5,0)
+         
+          const earth = new ExtendedObject3D()
+          const pos = {x:0, y:5, z:0}
+          this.third.load.fbx('/src/assets/newpixelearth.fbx').then(object =>{
+            earth.add(object)
+            this.third.add.existing(earth)
+          })
         }
       }
 
