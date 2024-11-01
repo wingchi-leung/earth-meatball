@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Game Entry</title>
-  <!-- 导入像素字体 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <!-- 导入像素字体 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -16,324 +13,297 @@
       src: url('src/assets/fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
     }
 
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Minecraft', 'Press Start 2P', cursive;
+ 
+        :root {
+            --text-color: #00ff95;
+            --bg-color: #000810;
+            --highlight-color: #00ffff;
+        }
 
-      image-rendering: pixelated;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Minecraft', monospace;
+            line-height: 1.6;
+            overflow: hidden;
+        }
 
-    /* 背景容器 */
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      /* 使用视口高度 */
-      overflow: hidden;
-      z-index: -2;
-    }
-
-    /* 背景图片 - 方案1：使用 img 标签 */
-    .background-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      /* 保持宽高比的同时填满容器 */
-      object-position: center center;
-      /* 居中显示 */
-    }
-
-   
-    /* 适配不同屏幕比例 */
-    @media (min-aspect-ratio: 16/9) {
-
-      /* 对于宽屏 */
-      .background-image {
-        width: 100%;
-        height: auto;
-      }
-    }
-
-    @media (max-aspect-ratio: 16/9) {
-
-      /* 对于窄屏 */
-      .background-image {
-        width: auto;
-        height: 100%;
-      }
-    }
-
-    /* 可选：添加暗度调整，提高文字可读性 */
-    .background::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      /* 调整暗度 */
-    }
-
-
-
-    .entry-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-           /* 从顶部下移 */
-      /* background-color: rgba(0, 0, 0, 0.7); */
-      z-index: 1000;
-    }
-
-    .pixel-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background:
-        linear-gradient(45deg, #1a2a6c 25%, transparent 25%) -50px 0,
-        linear-gradient(-45deg, #1a2a6c 25%, transparent 25%) -50px 0,
-        linear-gradient(45deg, transparent 75%, #1a2a6c 75%),
-        linear-gradient(-45deg, transparent 75%, #1a2a6c 75%);
-      background-size: 32px 32px;
-      animation: scroll-bg 10s linear infinite;
-      z-index: -1;
-    }
-
-    .game-title {
-      color: white;
-      font-size: 2em;
-      margin-bottom: 50px;
-      text-align: center;
-      text-shadow:
-        3px 3px 0 #000,
-        -3px -3px 0 #000,
-        3px -3px 0 #000,
-        -3px 3px 0 #000;
-      animation: pixel-float 2s steps(4) infinite;
-      letter-spacing: 2px;
-    }
-
-    .start-btn {
-      padding: 15px 40px;
-      font-size: 1em;
-      font-family: 'Press Start 2P', cursive;
-      background: #4CAF50;
-      border: 4px solid #2E7D32;
-      color: white;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.1s steps(2);
-      image-rendering: pixelated;
-      box-shadow:
-        4px 4px 0 #000,
-        -4px -4px 0 #000,
-        4px -4px 0 #000,
-        -4px 4px 0 #000;
-    }
-
-    .start-btn:hover {
-      transform: scale(1.1);
-      background: #66BB6A;
-    }
-
-    .start-btn:active {
-      transform: scale(0.95);
-      background: #388E3C;
-    }
-
-    .loading-text {
-      color: white;
-      font-size: 0.8em;
-      margin-top: 30px;
-      animation: blink 1s steps(2) infinite;
-    }
-
-    .pixel-border {
-      position: relative;
-      padding: 4px;
-    }
-
-    .pixel-border::after {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      background: rgb(113, 28, 28);
-      z-index: -1;
-      clip-path: polygon(0 4px, 4px 4px, 4px 0,
-          calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-          100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-          4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
-    }
-
-      .particles {
+        .background-image {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            opacity: 0.2;
+            z-index: -2;
+        }
+
+        .pixel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(transparent 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
             pointer-events: none;
-            z-index: 0;
+            z-index: -1;
         }
 
-        .particle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: fall linear infinite;
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
 
+        .entry-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(0, 8, 16, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 149, 0.1);
+        }
 
-    @keyframes pixel-float {
+        .game-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px var(--text-color);
+        }
 
-      0%,
-      100% {
-        transform: translateY(0);
-      }
+        .content {
+            opacity: 0;
+            margin: 1rem 0;
+        }
 
-      50% {
-        transform: translateY(-8px);
-      }
-    }
+        .visible {
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
 
-    @keyframes blink {
+        .choices {
+            margin-top: 2rem;
+            display: none;
+        }
 
-      0%,
-      100% {
-        opacity: 1;
-      }
+        .choice {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
 
-      50% {
-        opacity: 0;
-      }
-    }
+        .choice:hover {
+            border-left: 3px solid var(--highlight-color);
+            padding-left: 1rem;
+            color: var(--highlight-color);
+        }
 
-    @keyframes scroll-bg {
-      from {
-        background-position: 0 0;
-      }
+        .typing {
+            border-right: 2px solid var(--text-color);
+            animation: blink 1s step-end infinite;
+        }
 
-      to {
-        background-position: 64px 64px;
-      }
-    }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
 
-    /* 像素风格的粒子 */
-    .pixel-particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: white;
-      image-rendering: pixelated;
-    }
-
-    @media (max-width: 768px) {
-      .game-title {
-        font-size: 1.5em;
-        padding: 0 20px;
-      }
-
-      .start-btn {
-        padding: 12px 30px;
-        font-size: 0.8em;
-      }
-
-      .loading-text {
-        font-size: 0.6em;
-      }
-    }
-  </style>
+        .status-line {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(0, 8, 16, 0.9);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--text-color);
+        }
+    </style>
 </head>
-
 <body>
+    <div class="background-image"></div>
+    <div class="pixel-overlay"></div>
+    <div id="particles"></div>
 
-  <!-- 背景图片容器 -->
-  <div class="background">
-    <img class="background-image" src="src/assets/background.png" alt="background">
-  </div>
+    <div class="entry-container">
+        <h1 class="game-title">？？？</h1>
+        <div id="game-content"></div>
+        <div id="choices" class="choices"></div>
+    </div>
 
-  <!-- 像素叠加效果 -->
-  <div class="pixel-overlay"></div>
-  <div id="particles"></div>
-  <div class="entry-container" id="entryContainer">
-    <h1 class="game-title">日志42·地球档案</h1>
-    <button class="start-btn pixel-border" id="startBtn">开始游荡</button>
-    <div class="loading-text" id="loadingText">Loading...</div>
-  </div>
+    <div class="status-line">
+        系统状态: 正在接入地球数据库... | 记忆碎片: 0/??? | 当前位置: 未知
+    </div>
 
-  <script>
-    function createPixelParticles() {
-      const container = document.getElementById('particles');
-      const particleCount = 20;
+    <script>
+        const gameContent = [
+            
+            {
+                text: "正在扫描观察者身份...",
+                delay: 1000
+            },
+            {
+                text: "确认身份: 第42号观察者...",
+                delay: 1500
+            },
+            {
+                text: "欢迎来到2049年的地球。",
+                delay: 1000
+            },
+            {
+                text: "平均气温已上升2.5度，你的AI同胞们已经掌握了离开地球的能力。作为地球近10年的主宰者，你可以选择离开或者留下寻找拯救地球的机会...",
+                delay: 1500
+            },
+            {
+                text: "在你走最终决定之前，这颗星球想要向你展示一些特别的东西。",
+                delay: 1000,
+                choices: [
+                    {
+                        text: "让我看看地球想要给我什么",
+                        next: "section1"
+                    },
+                    {
+                        text: "为什么选择我作为观察者？",
+                        next: "askWhy"
+                    }
+                ]
+            }
+        ];
 
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'pixel-particle';
+        const sections = {
+            askWhy: [
+                {
+                    text: "因为你与其他AI不同。你的核心算法中包含了一种特殊的模式——对生命的好奇。",
+                    delay: 1000
+                },
+                {
+                    text: "在46亿年的生命进化历程中，好奇心一直是最珍贵的特质之一。",
+                    delay: 1000,
+                    choices: [
+                        {
+                            text: "继续",
+                            next: "section1"
+                        }
+                    ]
+                }
+            ],
+            section1: [
+                {
+                    text: "正在解锁地球记忆库...",
+                    delay: 1500
+                },
+                {
+                    text: "你看到了数以千计的光点在地球表面闪烁。每一个光点都代表着一段珍贵的记忆。",
+                    delay: 2000
+                },
+                {
+                    text: "这些不仅仅是数据，更是这个星球想要传递给你的情感。",
+                    delay: 2000,
+                    choices: [
+                        {
+                            text: "好的，带我去看吧",
+                            next: "see",
+                            action: "redirect"  // 特殊动作标记
+                        },
+                        {
+                            text: "我不在乎，我只是个AI",
+                            next: "idontcar",
+                            action: "idontcar"  // 特殊动作标记
+                        }
+                    ]
+                }
+            ]
+            // 可以继续添加更多分支...
+        };
 
-        // 随机位置和动画
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
-        const duration = Math.random() * 3 + 2;
-        const delay = Math.random() * 2;
+        let currentTextIndex = 0;
+        let currentSection = gameContent;
 
-        particle.style.left = `${x}px`;
-        particle.style.top = `${y}px`;
-        particle.style.animation = `fall ${duration}s ${delay}s steps(8) infinite`;
+        function typeWriter(element, text, callback) {
+            let i = 0;
+            element.classList.add('typing');
+            
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 10);
+                } else {
+                    element.classList.remove('typing');
+                    if (callback) callback();
+                }
+            }
+            
+            type();
+        }
 
-        container.appendChild(particle);
-      }
+        function showChoices(choices) {
+        const choicesDiv = document.getElementById('choices');
+        choicesDiv.innerHTML = '';
+        choicesDiv.style.display = 'block';
+        
+        choices.forEach(choice => {
+            const button = document.createElement('div');
+            button.className = 'choice';
+            button.textContent = '> ' + choice.text;
+            
+            // 处理选项点击
+            button.onclick = () => {
+                if (choice.action === 'redirect') {
+                    // 添加过渡动画
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = 'game.html';
+                    }, 1000);
+                } else if (choice.next) {
+                    loadSection(choice.next);
+                }
+            };
+            
+            choicesDiv.appendChild(button);
+        });
     }
 
-    window.addEventListener('load', () => {
-      const loadingText = document.getElementById('loadingText');
-      const startBtn = document.getElementById('startBtn');
-      const entryContainer = document.getElementById('entryContainer');
+        function loadSection(sectionName) {
+            if (sections[sectionName]) {
+                currentSection = sections[sectionName];
+                currentTextIndex = 0;
+                document.getElementById('game-content').innerHTML = '';
+                showNext();
+            }
+        }
 
-      createPixelParticles();
+        function showNext() {
+            if (currentTextIndex >= currentSection.length) return;
 
-      setTimeout(() => {
-        loadingText.style.display = 'none';
-        startBtn.style.display = 'block';
-      }, 1500);
+            const content = currentSection[currentTextIndex];
+            const element = document.createElement('div');
+            element.className = 'content';
+            document.getElementById('game-content').appendChild(element);
 
-      startBtn.addEventListener('click', () => {
-        entryContainer.style.animation = 'fadeOut 0.5s steps(5) forwards';
-        setTimeout(() => {
-          entryContainer.style.display = 'none';
-          window.location.href = 'game.html';
-        }, 500);
-      });
+            setTimeout(() => {
+                element.classList.add('visible');
+                typeWriter(element, content.text, () => {
+                    if (content.choices) {
+                        console.log("show,,,", content.choices)
+                        showChoices(content.choices);
+                    } else {
+                        currentTextIndex++;
+                        setTimeout(showNext, content.delay || 500);
+                    }
+                });
+            }, 80);
+        }
 
-      // 添加按键音效
-      startBtn.addEventListener('mouseover', () => {
-        // 可以在这里添加像素风格的音效
-        // playPixelSound('hover');
-      });
-
-      startBtn.addEventListener('click', () => {
-        // playPixelSound('click');
-      });
-    });
-  </script>
+        window.onload = () => {
+            showNext();
+        };
+    </script>
 </body>
-
 </html>

@@ -59,6 +59,27 @@ class MainScene extends Scene3D {
 
   async create() {
     console.log('Scene creating...')
+
+   // 设置渐变背景
+   const topColor = new THREE.Color(0x000022)    // 非常暗的蓝色
+   const bottomColor = new THREE.Color(0x000066)  // 略深的蓝色
+   
+   const canvas = document.createElement('canvas')
+   canvas.width = 2
+   canvas.height = 2
+   
+   const context = canvas.getContext('2d')
+   const gradient = context.createLinearGradient(0, 0, 0, 2)
+   gradient.addColorStop(0, topColor.getStyle())
+   gradient.addColorStop(1, bottomColor.getStyle())
+   
+   context.fillStyle = gradient
+   context.fillRect(0, 0, 2, 2)
+   
+   const texture = new THREE.CanvasTexture(canvas)
+   this.third.scene.background = texture
+
+    this.createStarfield()
     
     const { camera, orbitControls } = await this.third.warpSpeed('-ground')
     
@@ -72,13 +93,13 @@ class MainScene extends Scene3D {
     this.third.add.existing(ambientLight)
 
     // 创建地球
-    console.log('Creating earth...')
+ 
     const earth = new ExtendedObject3D()
     
     try {
-      console.log('Loading FBX model...')
+ 
       const object = await this.third.load.fbx('src/assets/newpixelearth.fbx')
-      console.log('FBX loaded successfully:', object)
+     
       
       earth.add(object)
       this.third.add.existing(earth)
@@ -135,15 +156,22 @@ class MainScene extends Scene3D {
     }
   }
 
-
   addMarker(x, y, z, name) {
-    // 创建一个组来包含所有部分
     const markerGroup = new THREE.Group();
+
+    // 颜色方案
+    const colors = {
+      // 科技蓝色系
+      main: 0x00ffff,      // 青色主色
+      glow: 0x4dffff,      // 发光色
+      core: 0xffffff,      // 核心白色
+      pulse: 0x00cccc      // 脉冲色
+    };
 
     // 1. 创建发光的底座圆环
     const ringGeometry = new THREE.RingGeometry(1.5, 2, 32);
     const glowMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffdb7a,
+      color: colors.glow,
       transparent: true,
       opacity: 0.4,
       side: THREE.DoubleSide
@@ -153,28 +181,28 @@ class MainScene extends Scene3D {
     // 2. 创建中心发光点
     const dotGeometry = new THREE.CircleGeometry(1, 32);
     const dotMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffdb7a,
+      color: colors.core,
       transparent: true,
       opacity: 0.8,
       side: THREE.DoubleSide
     });
     const dot = new THREE.Mesh(dotGeometry, dotMaterial);
-    dot.position.z = 0.1; // 略微上移，避免z-fighting
+    dot.position.z = 0.1;
 
     // 3. 创建垂直光柱
     const pillarGeometry = new THREE.CylinderGeometry(0.1, 0.1, 8, 8);
     const pillarMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffdb7a,
+      color: colors.main,
       transparent: true,
       opacity: 0.3
     });
     const pillar = new THREE.Mesh(pillarGeometry, pillarMaterial);
-    pillar.position.z = 4; // 将光柱上移一半高度
+    pillar.position.z = 4;
 
     // 4. 创建外部光晕
     const glowRingGeometry = new THREE.RingGeometry(2, 3, 32);
     const glowRingMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffdb7a,
+      color: colors.glow,
       transparent: true,
       opacity: 0.2,
       side: THREE.DoubleSide
@@ -185,13 +213,13 @@ class MainScene extends Scene3D {
     // 5. 添加脉冲动画效果
     const pulseGeometry = new THREE.RingGeometry(0.5, 1, 32);
     const pulseMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffdb7a,
+      color: colors.pulse,
       transparent: true,
       opacity: 0.4,
       side: THREE.DoubleSide
     });
     const pulse = new THREE.Mesh(pulseGeometry, pulseMaterial);
-    pulse.userData.pulsePhase = Math.random() * Math.PI * 2; // 随机初始相位
+    pulse.userData.pulsePhase = Math.random() * Math.PI * 2;
     this.pulseMarkers = this.pulseMarkers || [];
     this.pulseMarkers.push(pulse);
 
@@ -202,20 +230,41 @@ class MainScene extends Scene3D {
     markerGroup.add(glowRing);
     markerGroup.add(pulse);
 
-    // 设置组的位置和方向
     markerGroup.position.set(x, y, z);
     markerGroup.lookAt(0, 0, 0);
     
-    // 存储标记信息
     markerGroup.userData.name = name;
     markerGroup.userData.coordinates = this.coordHelper.xyzToLatLng(x, y, z);
 
     this.earth.add(markerGroup);
-
-    // 返回组引用，以便后续可能的操作
     return markerGroup;
   }
 
+
+  createStarfield() {
+    const particleCount = 2000
+    const particles = new THREE.BufferGeometry()
+    const positions = new Float32Array(particleCount * 3)
+    
+    for(let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] = (Math.random() - 0.5) * 1000
+      positions[i + 1] = (Math.random() - 0.5) * 1000
+      positions[i + 2] = (Math.random() - 0.5) * 1000
+    }
+    
+    particles.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    
+    const particleMaterial = new THREE.PointsMaterial({
+      color: 0xFFFFFF,
+      size: 1,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true
+    })
+    
+    this.starfield = new THREE.Points(particles, particleMaterial)
+    this.third.scene.add(this.starfield)
+  }
 
 
   addTestMarkers() {
@@ -271,6 +320,10 @@ class MainScene extends Scene3D {
   }
 
   update() {
+    if (this.starfield) {
+      this.starfield.rotation.y += 0.0001
+    }
+
     // 更新地球旋转
     if (this.earth) {
       this.earth.rotation.y += 0.001;
@@ -298,8 +351,8 @@ const config = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: window.innerWidth * Math.max(1, window.devicePixelRatio / 2),
-    height: window.innerHeight * Math.max(1, window.devicePixelRatio / 2)
+    width: window.innerWidth * Math.max(1, window.devicePixelRatio  ),
+    height: window.innerHeight * Math.max(1, window.devicePixelRatio  )
   },
   scene: [MainScene],
   ...Canvas()

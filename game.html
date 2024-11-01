@@ -13,8 +13,31 @@
     <script src="src/lib/phaser.min.js"></script>
     <script src="src/lib/enable3d/enable3d.phaserExtension.0.25.4.min.js"></script>
     <script src="src/js/index.js" defer></script>
+
+    <style>
+        @font-face {
+          font-family: 'Minecraft';
+          src: url('src/assets/fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+        }
+
+
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Minecraft', monospace;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+ 
+    </style>    
    </head>
 
   <body>
+    <div class="background-image"></div>
+    <div class="pixel-overlay"></div>
+    <div id="particles"></div>
   </body>
 </html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Game Entry</title>
+  <!-- 导入像素字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Minecraft';
+      src: url('src/assets/fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+    }
+
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Minecraft', 'Press Start 2P', cursive;
+
+      image-rendering: pixelated;
+    }
+
+    /* 背景容器 */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      /* 使用视口高度 */
+      overflow: hidden;
+      z-index: -2;
+    }
+
+    /* 背景图片 - 方案1：使用 img 标签 */
+    .background-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* 保持宽高比的同时填满容器 */
+      object-position: center center;
+      /* 居中显示 */
+    }
+
+   
+    /* 适配不同屏幕比例 */
+    @media (min-aspect-ratio: 16/9) {
+
+      /* 对于宽屏 */
+      .background-image {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    @media (max-aspect-ratio: 16/9) {
+
+      /* 对于窄屏 */
+      .background-image {
+        width: auto;
+        height: 100%;
+      }
+    }
+
+    /* 可选：添加暗度调整，提高文字可读性 */
+    .background::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      /* 调整暗度 */
+    }
+
+
+
+    .entry-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+           /* 从顶部下移 */
+      /* background-color: rgba(0, 0, 0, 0.7); */
+      z-index: 1000;
+    }
+
+    .pixel-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(45deg, #1a2a6c 25%, transparent 25%) -50px 0,
+        linear-gradient(-45deg, #1a2a6c 25%, transparent 25%) -50px 0,
+        linear-gradient(45deg, transparent 75%, #1a2a6c 75%),
+        linear-gradient(-45deg, transparent 75%, #1a2a6c 75%);
+      background-size: 32px 32px;
+      animation: scroll-bg 10s linear infinite;
+      z-index: -1;
+    }
+
+    .game-title {
+      color: white;
+      font-size: 2em;
+      margin-bottom: 50px;
+      text-align: center;
+      text-shadow:
+        3px 3px 0 #000,
+        -3px -3px 0 #000,
+        3px -3px 0 #000,
+        -3px 3px 0 #000;
+      animation: pixel-float 2s steps(4) infinite;
+      letter-spacing: 2px;
+    }
+
+    .start-btn {
+      padding: 15px 40px;
+      font-size: 1em;
+      font-family: 'Press Start 2P', cursive;
+      background: #4CAF50;
+      border: 4px solid #2E7D32;
+      color: white;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.1s steps(2);
+      image-rendering: pixelated;
+      box-shadow:
+        4px 4px 0 #000,
+        -4px -4px 0 #000,
+        4px -4px 0 #000,
+        -4px 4px 0 #000;
+    }
+
+    .start-btn:hover {
+      transform: scale(1.1);
+      background: #66BB6A;
+    }
+
+    .start-btn:active {
+      transform: scale(0.95);
+      background: #388E3C;
+    }
+
+    .loading-text {
+      color: white;
+      font-size: 0.8em;
+      margin-top: 30px;
+      animation: blink 1s steps(2) infinite;
+    }
+
+    .pixel-border {
+      position: relative;
+      padding: 4px;
+    }
+
+    .pixel-border::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      background: rgb(113, 28, 28);
+      z-index: -1;
+      clip-path: polygon(0 4px, 4px 4px, 4px 0,
+          calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+          100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+          4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px));
+    }
+
+      .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: fall linear infinite;
+        }
+
+
+    @keyframes pixel-float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes scroll-bg {
+      from {
+        background-position: 0 0;
+      }
+
+      to {
+        background-position: 64px 64px;
+      }
+    }
+
+    /* 像素风格的粒子 */
+    .pixel-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: white;
+      image-rendering: pixelated;
+    }
+
+    @media (max-width: 768px) {
+      .game-title {
+        font-size: 1.5em;
+        padding: 0 20px;
+      }
+
+      .start-btn {
+        padding: 12px 30px;
+        font-size: 0.8em;
+      }
+
+      .loading-text {
+        font-size: 0.6em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 背景图片容器 -->
+  <div class="background">
+    <img class="background-image" src="src/assets/background.png" alt="background">
+  </div>
+
+  <!-- 像素叠加效果 -->
+  <div class="pixel-overlay"></div>
+  <div id="particles"></div>
+  <div class="entry-container" id="entryContainer">
+    <h1 class="game-title">日志42·地球档案</h1>
+    <button class="start-btn pixel-border" id="startBtn">开始游荡</button>
+    <div class="loading-text" id="loadingText">Loading...</div>
+  </div>
+
+  <script>
+    function createPixelParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 20;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'pixel-particle';
+
+        // 随机位置和动画
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * window.innerHeight;
+        const duration = Math.random() * 3 + 2;
+        const delay = Math.random() * 2;
+
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        particle.style.animation = `fall ${duration}s ${delay}s steps(8) infinite`;
+
+        container.appendChild(particle);
+      }
+    }
+
+    window.addEventListener('load', () => {
+      const loadingText = document.getElementById('loadingText');
+      const startBtn = document.getElementById('startBtn');
+      const entryContainer = document.getElementById('entryContainer');
+
+      createPixelParticles();
+
+      setTimeout(() => {
+        loadingText.style.display = 'none';
+        startBtn.style.display = 'block';
+      }, 1500);
+
+      startBtn.addEventListener('click', () => {
+        entryContainer.style.animation = 'fadeOut 0.5s steps(5) forwards';
+        setTimeout(() => {
+          entryContainer.style.display = 'none';
+          window.location.href = 'game.html';
+        }, 500);
+      });
+
+      // 添加按键音效
+      startBtn.addEventListener('mouseover', () => {
+        // 可以在这里添加像素风格的音效
+        // playPixelSound('hover');
+      });
+
+      startBtn.addEventListener('click', () => {
+        // playPixelSound('click');
+      });
+    });
+  </script>
+</body>
+
+</html>
