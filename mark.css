@@ -1,0 +1,100 @@
+
+@font-face {
+    font-family: 'Minecraft';
+    src: url('src/assets/fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+  }
+
+.popup-container {
+    position: fixed;
+    padding: 20px;
+    background: rgba(0, 15, 30, 0.95);
+    border: 1px solid #52acac;
+    border-radius: 5px;
+    color: #00ffff;
+    font-family: 'Courier New', monospace;
+    display: none;
+    z-index: 1000;
+    max-width: 300px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .popup-close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    color: #00ffff;
+    font-size: 16px;
+    padding: 5px;
+    transition: color 0.3s ease;
+  }
+  
+  .popup-close:hover {
+    color: #ff4444;
+  }
+  
+  .popup-title {
+    margin: 0 0 10px 0;
+    color: #00ffff;
+    border-bottom: 1px solid #00ffff;
+    padding-bottom: 5px;
+    font-size: 1.2em;
+  }
+  
+  .popup-coordinates {
+    margin: 10px 0;
+    font-size: 0.9em;
+    background: rgba(0, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 3px;
+  }
+  
+  .coordinate-item {
+    margin: 5px 0;
+  }
+  
+  .popup-description {
+    margin: 10px 0;
+    line-height: 1.4;
+    font-size: 0.95em;
+    color: #b4ffff;
+  }
+  
+  @keyframes popupFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .popup-show {
+    display: block;
+    animation: popupFadeIn 0.3s ease-out;
+  }
+
+  /* ... 之前的样式 ... */
+
+.popup-image {
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .popup-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  .popup-image img:hover {
+    transform: scale(1.05);
+  }

@@ -28,6 +28,7 @@
             font-family: 'Minecraft', monospace;
             line-height: 1.6;
             overflow: hidden;
+            font-size:25px
         }
 
         .background-image {
@@ -255,13 +256,21 @@
             
             // 处理选项点击
             button.onclick = () => {
+                
                 if (choice.action === 'redirect') {
                     // 添加过渡动画
                     document.body.style.opacity = '0';
                     setTimeout(() => {
                         window.location.href = 'game.html';
                     }, 1000);
-                } else if (choice.next) {
+                } 
+                else if (choice.action == 'idontcar'){
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        window.location.href = 'gameover.html';
+                    }, 1000); 
+                }
+                else   {
                     loadSection(choice.next);
                 }
             };
@@ -291,7 +300,7 @@
                 element.classList.add('visible');
                 typeWriter(element, content.text, () => {
                     if (content.choices) {
-                        console.log("show,,,", content.choices)
+                         
                         showChoices(content.choices);
                     } else {
                         currentTextIndex++;
