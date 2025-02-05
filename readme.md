@@ -7,6 +7,8 @@ this is an demo make by blender,enable3d and ammo.wasm.js.
 download this repository 
 
 `npm install` 
+
+
 `npm start` 
 
 
